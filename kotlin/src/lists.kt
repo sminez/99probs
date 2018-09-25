@@ -10,6 +10,12 @@ fun main(args: Array<String>) {
     println(prob3(lst, 3))
     println(prob4(lst))
     println(prob5(lst))
+    println(prob6(lst))
+    println(prob6(listOf(1,2,3,2,1)))
+    println(prob7(listOf(1,2,3, listOf(4,5, listOf(6,7), 8), 9)))
+    println(prob8(listOf(1,1,1,2,2,3,3,3,3,3,3,4,4,4,4,4,5,5,5,6)))
+    println(prob9(listOf(1,1,1,2,2,3,3,3,3,3,3,4,4,4,4,4,5,5,5,6)))
+    println(prob10(listOf(1,1,1,2,2,3,3,3,3,3,3,4,4,4,4,4,5,5,5,6)))
 }
 
 // Find the last element of a list.
@@ -31,77 +37,87 @@ fun <T> prob4(lst: List<T>) = lst.size
 fun <T> prob5(lst: List<T>) = lst.reversed()
 
 
-/*fun prob_6(lst):*/
-/*    /***/
-/*    Find out whether a list is a palindrome : A palindrome can be read forward*/
-/*    or backward; e.g : (x a m a x)*/
-/*    **/*/
-/*    return lst == reversed(lst)*/
+// Find out whether a list is a palindrome : A palindrome can be read forward*/
+// or backward; e.g : (x a m a x)*/
+fun <T> prob6(lst: List<T>) = lst == lst.reversed()
 
 
-/*fun prob_7(lst):*/
-/*    // Flatten a nested list structure*/
-/*    fun flatten(col):*/
-/*        if not isinstance(col, list):*/
-/*            return [col]*/
-/*        return reduce(lambda a, b: a+b, map(flatten, col))*/
-
-/*    return flatten(lst)*/
-
-
-/*fun prob_8(lst):*/
-/*    // Eliminate consecutive duplicates of list elements*/
-/*    last = lst[0]*/
-/*    new_list = [last]*/
-
-/*    for elem in lst[1:]:*/
-/*        if elem != last:*/
-/*            new_list.append(elem)*/
-/*            last = elem*/
-/*    return new_list*/
+// Flatten a nested list structure
+fun <T> prob7(lst: List<T>): List<T> {
+    fun <T> flatten(l: List<T>): List<T> {
+        val flattened = mutableListOf<T>()
+        for (subList in l) {
+            when (subList) {
+                is List<*> -> {
+                    @Suppress("UNCHECKED_CAST")
+                    flattened.addAll(flatten(subList as List<T>))
+                }
+                else -> flattened.add(subList)
+            }
+        }
+        return flattened
+    }
+    return flatten(lst)
+}
 
 
-/*fun prob_9(lst):*/
-/*    /***/
-/*    Pack consecutive duplicates of list elements into sublists : If a list*/
-/*    contains repeated elements they should be placed in separate sublists*/
-/*    **/*/
-/*    new_list = []*/
-/*    last = lst[0]*/
-/*    sub_list = [last]*/
+// Eliminate consecutive duplicates of list elements
+fun <T> prob8(lst: List<T>): List<T> {
+    var current = lst.first()
+    val newList = mutableListOf<T>()
 
-/*    for elem in lst[1:]:*/
-/*        if elem == last:*/
-/*            sub_list.append(elem)*/
-/*        else:*/
-/*            new_list.append(sub_list)*/
-/*            sub_list = [elem]*/
-/*            last = elem*/
+    for (elem in lst.subList(1, lst.size)) {
+        if (elem != current) {
+            newList.add(elem)
+            current = elem
+        }
+    }
+    return newList
+}
 
-/*    new_list.append(sub_list)*/
+/**
+Pack consecutive duplicates of list elements into sublists : If a list
+contains repeated elements they should be placed in separate sublists
+**/
+fun <T> prob9(lst: List<T>): List<List<T>> {
+    val newList = mutableListOf<List<T>>()
+    var current = lst.first()
+    var subList = mutableListOf(current)
 
-/*    return new_list*/
+    for (elem in lst.subList(1, lst.size)) {
+        if (elem == current) {
+            subList.add(elem)
+        } else {
+            newList.add(subList)
+            subList = mutableListOf(elem)
+            current = elem
+        }
+    }
+    newList.add(subList)
+    return newList
+}
 
 
-/*fun prob_10(lst):*/
-/*    /***/
-/*    Run-length encoding of a list : Use the result of problem P09 to implement*/
-/*    the so-called run-length encoding data compression method : Consecutive*/
-/*    duplicates of elements are encoded as lists [N, E] where N is the number of*/
-/*    duplicates of the element E*/
-/*    **/*/
-/*    new_list = []*/
-/*    last = lst[0]*/
-/*    count = 1*/
+/**
+Run-length encoding of a list : Use the result of problem P09 to implement
+the so-called run-length encoding data compression method : Consecutive
+duplicates of elements are encoded as lists [N, E] where N is the number of
+duplicates of the element E
+ **/
+fun <T> prob10(lst: List<T>): List<Pair<Int, T>> {
+    val newList = mutableListOf<Pair<Int, T>>()
+    var current = lst.first()
+    var count = 1
 
-/*    for elem in lst[1:]:*/
-/*        if elem == last:*/
-/*            count += 1*/
-/*        else:*/
-/*            new_list.append([count, last])*/
-/*            last = elem*/
-/*            count = 1*/
-
-/*    new_list.append([count, last])*/
-
-/*    return new_list*/
+    for (elem in lst.subList(1, lst.size)) {
+        if (elem == current) {
+            count += 1
+        } else {
+            newList.add(Pair(count, current))
+            current = elem
+            count = 1
+        }
+    }
+    newList.add(Pair(count, current))
+    return newList
+}
