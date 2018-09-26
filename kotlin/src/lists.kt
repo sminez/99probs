@@ -1,22 +1,8 @@
 /*
  * List problems from the 99 prolog problems problem set.
  */
-package listprobs
+package probs
 
-fun main(args: Array<String>) {
-    val lst = listOf(1,2,3,4,5)
-    println(prob1(lst))
-    println(prob2(lst))
-    println(prob3(lst, 3))
-    println(prob4(lst))
-    println(prob5(lst))
-    println(prob6(lst))
-    println(prob6(listOf(1,2,3,2,1)))
-    println(prob7(listOf(1,2,3, listOf(4,5, listOf(6,7), 8), 9)))
-    println(prob8(listOf(1,1,1,2,2,3,3,3,3,3,3,4,4,4,4,4,5,5,5,6)))
-    println(prob9(listOf(1,1,1,2,2,3,3,3,3,3,3,4,4,4,4,4,5,5,5,6)))
-    println(prob10(listOf(1,1,1,2,2,3,3,3,3,3,3,4,4,4,4,4,5,5,5,6)))
-}
 
 // Find the last element of a list.
 fun <T> prob1(lst: List<T>) = lst.last()
@@ -121,3 +107,54 @@ fun <T> prob10(lst: List<T>): List<Pair<Int, T>> {
     newList.add(Pair(count, current))
     return newList
 }
+
+// Given a run-length code list, construct its uncompressed version
+fun <T> prob12(lst: List<Pair<Int, T>>): List<T> {
+    var newList = mutableListOf<T>()
+    for ((count, elem) in lst) {
+        for (k in 1..count) {
+            newList.add(elem)
+        }
+    }
+    return newList
+}
+
+// Duplicate the elements of a list
+fun <T> prob14(lst: List<T>): List<T> {
+    val newList = mutableListOf<T>()
+    for (elem in lst) {
+        newList.addAll(listOf(elem, elem))
+    }
+    return newList
+}
+
+// Replicate the elements of a list a given number of times :
+fun <T> prob15(lst: List<T>, count: Int): List<T> {
+    val newList = mutableListOf<T>()
+    for (elem in lst) {
+        for (k in 1..count) {
+            newList.add(elem)
+        }
+    }
+    return newList
+}
+
+// Drop every N'th element from a list
+fun <T> prob16(lst: List<T>, n: Int): List<T> {
+    return lst.filterIndexed { index, _ -> (index + 1) % n != 0 }
+}
+
+// Split a list into two parts; the length of the first part is given
+fun <T> prob17(lst: List<T>, split: Int): Pair<List<T>, List<T>> {
+    var list1 = lst.subList(0, split)
+    var list2 = lst.subList(split, lst.size)
+    return Pair(list1, list2)
+}
+
+// Extract a slice from a list
+fun <T> prob18(lst: List<T>, from: Int, to: Int) = lst.subList(from, to)
+
+// 19 : Rotate a list N places to the left
+
+// 20 : Remove the K'th element from a list
+
